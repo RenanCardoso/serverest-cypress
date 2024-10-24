@@ -1,0 +1,35 @@
+{
+  "name": "serverest-testes-de-api-e-e2e-com-cypress",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "lint": "npx standard",
+    "lint:fix": "npx standard --fix",
+    "test": "cypress run",
+    "cy:open": "cypress open"
+  },
+  "standard": {
+    "globals": [
+      "localStorage",
+      "context",
+      "before",
+      "beforeEach",
+      "after",
+      "afterEach",
+      "cy",
+      "Cypress",
+      "describe",
+      "expect",
+      "it",
+      "options",
+      "faker"
+    ]
+  },
+  "devDependencies": {
+    "cypress": "^13.15.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.0.3",
+    "cypress-plugin-api": "^2.11.2"
+  }
+}
