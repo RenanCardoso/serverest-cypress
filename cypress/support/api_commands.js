@@ -71,6 +71,7 @@ Cypress.Commands.add('apiRegisterUser', (accessToken, user) => {
   cy.request({
     method: 'POST',
     url: `${Cypress.config('apiUrl')}/usuarios`,
+    failOnStatusCode: false,
     body: {
       nome: user.name,
       email: user.email,
