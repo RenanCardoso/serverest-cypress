@@ -39,7 +39,6 @@ Neste projeto, você pode rodar os testes em modo interativo ou modo [_headless_
 
 Execute o comando `npm test` (ou `npm t` para a versão curta) para rodar a   todos os testes em modo [_headless_](https://docs.cypress.io/guides/guides/command-line).
 
-
 ### Modo interativo
 
 Execute o comando `npm run cy:open` para abrir a Cypress App e rodar os testes.
@@ -48,6 +47,23 @@ Execute o comando `npm run cy:open` para abrir a Cypress App e rodar os testes.
 
 Para análise estática de código estou utilizando a biblioteca [_eslint-plugin-cypress_](https://www.npmjs.com/package/eslint-plugin-cypress).
 Para realizar a análise estática de código, basta rodar o comando `npm run lint` ou execute diretamente o comando `npm run lint:fix` para realizar a análise e corrigir automaticamente os problemas encontrados.
+
+
+## CI/CD
+
+Para entregar o código em produção com rapidez e segurança, foi utilizado as seguintes soluções:
+
+### Conventional Commit
+
+Estou utilizando a biblioteca [_commitlint_](https://www.npmjs.com/package/@commitlint/cli) para validar se as mensagens de commit estão seguindo os padrões estabelecidos por [_Conventional Commit_](https://www.conventionalcommits.org/pt-br/v1.0.0/).
+
+A especificação do Conventional Commits é uma convenção simples para utilizar nas mensagens de commit. Ela define um conjunto de regras para criar um histórico de commit explícito, o que facilita a criação de ferramentas automatizadas baseadas na especificação.
+
+### Husky
+
+Estou utilizando a biblioteca [_husky_](https://www.npmjs.com/package/husky) para executar as ações em git hooks, como `pre-commit` e `commit-msg`;
+
+
 ___
 
 Feito com ☕ e ❤️ por [Renan](https://github.com/RenanCardoso).
