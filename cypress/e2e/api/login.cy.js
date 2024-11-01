@@ -1,5 +1,5 @@
 describe('Login', () => {
-  it('realizar login com sucesso via API e alterei', () => {
+  it('realizar login com sucesso via API', () => {
     const userEmail = Cypress.env('userEmail')
     const userPassword = Cypress.env('userPassword')
 
