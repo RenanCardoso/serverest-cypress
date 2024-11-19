@@ -14,7 +14,7 @@ describe('Buscar usuário por ID via API', () => {
   before(() => {
     cy.apiLogin().then((response) => {
       accessToken = response.body.authorization
-      cy.apiRegisterUser(accessToken, user).then((response) => {
+      cy.apiRegisterUser(user).then((response) => {
         expect(response.status).to.equal(201)
         user.id = response.body._id
       })

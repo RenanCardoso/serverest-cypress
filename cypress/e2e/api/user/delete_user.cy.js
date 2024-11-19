@@ -17,14 +17,10 @@ describe('Deletar usuário via API', () => {
       password: faker.internet.password({ length: 20 }),
       administrator: 'true'
     }
-    cy.apiLogin().then((response) => {
-      accessToken = response.body.authorization
-      cy.apiRegisterUser(accessToken, user).then((response) => {
-        expect(response.status).to.equal(201)
-        user.id = response.body._id
-      })
+    cy.apiRegisterUser(user).then((response) => {
+      expect(response.status).to.equal(201)
+      user.id = response.body._id
     })
-
     cy.apiDeleteUserById(accessToken, user).then((response) => {
       expect(response.status).to.equal(200)
     })
@@ -38,14 +34,10 @@ describe('Deletar usuário via API', () => {
       password: faker.internet.password({ length: 20 }),
       administrator: 'false'
     }
-    cy.apiLogin().then((response) => {
-      accessToken = response.body.authorization
-      cy.apiRegisterUser(accessToken, user).then((response) => {
-        expect(response.status).to.equal(201)
-        user.id = response.body._id
-      })
+    cy.apiRegisterUser(user).then((response) => {
+      expect(response.status).to.equal(201)
+      user.id = response.body._id
     })
-
     cy.apiDeleteUserById(accessToken, user).then((response) => {
       expect(response.status).to.equal(200)
     })

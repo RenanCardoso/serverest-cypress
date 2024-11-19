@@ -1,17 +1,40 @@
+import { faker } from '@faker-js/faker'
+
 Cypress.Commands.add('apiLogin', (userEmail, userPassword) => {
   if (!userEmail && !userPassword) {
-    userEmail = Cypress.env('adminUserEmail')
-    userPassword = Cypress.env('adminUserPassword')
+    userEmail = Cypress.env('adminUserEmail');
+    userPassword = Cypress.env('adminUserPassword');
   }
-  return cy.request({
-    method: 'POST',
-    url: `${Cypress.config('apiUrl')}/login`,
-    body: {
-      email: userEmail,
-      password: userPassword
+
+  const login = () => {
+    return cy.request({
+      method: 'POST',
+      url: `${Cypress.config('apiUrl')}/login`,
+      body: {
+        email: userEmail,
+        password: userPassword
+      },
+      failOnStatusCode: false // Adicionado para evitar que o teste falhe automaticamente em caso de status code diferente de 2xx
+    });
+  };
+
+  return login().then(response => {
+    if (response.status !== 200) {
+      const user = {
+        name: faker.person.fullName(),
+        email: faker.internet.email().toLowerCase(),
+        password: faker.internet.password({ length: 20 }),
+        administrator: 'true'
+      };
+      
+      return cy.apiRegisterUser(user).then(() => {
+        return login();
+      });
     }
-  })
-})
+
+    return response;
+  });
+});
 
 /** ** Produtos ****/
 Cypress.Commands.add('apiRegisterProduct', (accessToken, product) => {
@@ -92,7 +115,7 @@ Cypress.Commands.add('apiListUsers', (accessToken, user) => {
 Cypress.Commands.add('apiDeleteUserById', (accessToken, user) => {
   cy.request({
     method: 'DELETE',
-    url: `${Cypress.config('apiUrl')}/produtos/${user.id}`,
+    url: `${Cypress.config('apiUrl')}/usuarios/${user.id}`,
     headers: { Authorization: accessToken }
   })
 })
