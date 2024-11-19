@@ -9,8 +9,8 @@ describe('Deletar usuários', () => {
   }
 
   beforeEach(() => {
-    cy.guiLogin()
-    cy.guiRegisterUser(user)
+    cy.guiAdminLogin()
+    cy.guiRegisterUserAdminArea(user)
   })
 
   context('usuário administrador', () => {

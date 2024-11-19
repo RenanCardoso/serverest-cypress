@@ -1,6 +1,6 @@
 describe('Listar usuários', () => {
   beforeEach(() => {
-    cy.guiLogin()
+    cy.guiAdminLogin()
   })
 
   it('listar com sucesso', () => {

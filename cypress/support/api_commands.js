@@ -1,7 +1,7 @@
 Cypress.Commands.add('apiLogin', (userEmail, userPassword) => {
   if (!userEmail && !userPassword) {
-    userEmail = Cypress.env('userEmail')
-    userPassword = Cypress.env('userPassword')
+    userEmail = Cypress.env('adminUserEmail')
+    userPassword = Cypress.env('adminUserPassword')
   }
   return cy.request({
     method: 'POST',
@@ -67,7 +67,7 @@ Cypress.Commands.add('apiEditProductById', (accessToken, product, newProduct) =>
 })
 
 /** ** Usuários ****/
-Cypress.Commands.add('apiRegisterUser', (accessToken, user) => {
+Cypress.Commands.add('apiRegisterUser', (user) => {
   cy.request({
     method: 'POST',
     url: `${Cypress.config('apiUrl')}/usuarios`,
@@ -78,7 +78,6 @@ Cypress.Commands.add('apiRegisterUser', (accessToken, user) => {
       password: user.password,
       administrador: user.administrator
     },
-    headers: { Authorization: accessToken }
   })
 })
 
