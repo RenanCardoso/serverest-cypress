@@ -4,8 +4,22 @@ describe('Cadastrar usuário via GUI', () => {
 
   context('área logada', () => {
 
+    let user = {
+      name: faker.person.fullName(),
+      email: faker.internet.email().toLowerCase(),
+      password: faker.internet.password({ length: 20 }),
+      administrator: 'true'
+    }
+    const options = { cacheSession: false }
+
+    before(() => {
+      cy.apiRegisterUser(user).then((response) => {
+        expect(response.status).to.equal(201)
+      })
+    })
+
     beforeEach(() => {
-      cy.guiAdminLogin()
+      cy.guiAdminLogin(user.email, user.password, options)
     })
 
     it('cadastrar usuário administrador com sucesso', () => {

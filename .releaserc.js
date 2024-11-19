@@ -17,5 +17,5 @@ module.exports = {
     verifyConditions: ["@semantic-release/github"],
     publish: ["@semantic-release/github"],
     repositoryUrl: "https://github.com/RenanCardoso/serverest-cypress",
-    githubToken: "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",
+    githubToken: "",
 };
