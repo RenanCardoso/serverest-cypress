@@ -1,4 +1,5 @@
 import 'cypress-file-upload'
+import { faker } from '@faker-js/faker'
 
 Cypress.Commands.add(
   'guiAdminLogin',
@@ -7,33 +8,57 @@ Cypress.Commands.add(
     password = Cypress.env('adminUserPassword'),
     { cacheSession = true } = {}
   ) => {
-    const login = () => {
-      cy.visit(`${Cypress.config('baseUrl')}/login`)
-      cy.get("[data-testid='email']").type(user)
-      cy.get("[data-testid='senha']").type(password, { log: false })
+    const verifyUserExist = () => {
+      return cy.request({
+        method: 'POST',
+        url: `${Cypress.config('apiUrl')}/login`,
+        body: { email: user, password },
+        failOnStatusCode: false // Evita falhas automáticas em caso de status code diferente de 2xx
+      });
+    };
 
-      cy.intercept('POST', '**/login').as('postLogin')
-      cy.get("[data-testid='entrar']").click()
-      cy.wait('@postLogin').its('response.statusCode').should('eq', 200)
-    }
+    const performLogin = (email, password) => {
+      cy.visit(`${Cypress.config('baseUrl')}/login`);
+      cy.get("[data-testid='email']").type(email);
+      cy.get("[data-testid='senha']").type(password, { log: false });
 
-    const validate = () => {
-      cy.visit(`${Cypress.config('baseUrl')}/admin/home`)
-      cy.location('pathname', { timeout: 1000 })
-        .should('not.eq', `${Cypress.config('baseUrl')}/login`)
-    }
+      cy.intercept('POST', '**/login').as('postLogin');
+      cy.get("[data-testid='entrar']").click();
+      cy.wait('@postLogin').its('response.statusCode').should('eq', 200);
+    };
+
+    const validateSession = () => {
+      cy.visit(`${Cypress.config('baseUrl')}/admin/home`);
+      cy.location('pathname', { timeout: 1000 }).should('not.eq', '/login');
+    };
 
     const options = {
       cacheAcrossSpecs: true,
-      validate
-    }
+      validate: validateSession
+    };
 
-    if (cacheSession) {
-      cy.session(user, login, options)
-    } else {
-      login()
-    }
-  })
+    verifyUserExist().then(response => {
+      if (response.status !== 200) {
+        const newUser = {
+          name: faker.person.fullName(),
+          email: faker.internet.email().toLowerCase(),
+          password: faker.internet.password({ length: 20 }),
+          administrator: 'true'
+        };
+
+        cy.apiRegisterUser(newUser).then(() => {
+          performLogin(newUser.email, newUser.password);
+        });
+      } else {
+        if (cacheSession) {
+          cy.session(user, () => performLogin(user, password), options);
+        } else {
+          performLogin(user, password);
+        }
+      }
+    });
+  }
+);
 
 Cypress.Commands.add(
   'guiLogin',
@@ -42,33 +67,57 @@ Cypress.Commands.add(
     password = Cypress.env('userPassword'),
     { cacheSession = true } = {}
   ) => {
-    const login = () => {
-      cy.visit(`${Cypress.config('baseUrl')}/login`)
-      cy.get("[data-testid='email']").type(user)
-      cy.get("[data-testid='senha']").type(password, { log: false })
+    const verifyUserExist = () => {
+      return cy.request({
+        method: 'POST',
+        url: `${Cypress.config('apiUrl')}/login`,
+        body: { email: user, password },
+        failOnStatusCode: false // Evita falhas automáticas em caso de status code diferente de 2xx
+      });
+    };
 
-      cy.intercept('POST', '**/login').as('postLogin')
-      cy.get("[data-testid='entrar']").click()
-      cy.wait('@postLogin').its('response.statusCode').should('eq', 200)
-    }
+    const performLogin = (email, password) => {
+      cy.visit(`${Cypress.config('baseUrl')}/login`);
+      cy.get("[data-testid='email']").type(email);
+      cy.get("[data-testid='senha']").type(password, { log: false });
 
-    const validate = () => {
-      cy.visit(`${Cypress.config('baseUrl')}/home`)
-      cy.location('pathname', { timeout: 1000 })
-        .should('not.eq', `${Cypress.config('baseUrl')}/login`)
-    }
+      cy.intercept('POST', '**/login').as('postLogin');
+      cy.get("[data-testid='entrar']").click();
+      cy.wait('@postLogin').its('response.statusCode').should('eq', 200);
+    };
+
+    const validateSession = () => {
+      cy.visit(`${Cypress.config('baseUrl')}/home`);
+      cy.location('pathname', { timeout: 1000 }).should('not.eq', '/login');
+    };
 
     const options = {
       cacheAcrossSpecs: true,
-      validate
-    }
+      validate: validateSession
+    };
 
-    if (cacheSession) {
-      cy.session(user, login, options)
-    } else {
-      login()
-    }
-  })
+    verifyUserExist().then(response => {
+      if (response.status !== 200) {
+        const newUser = {
+          name: faker.person.fullName(),
+          email: faker.internet.email().toLowerCase(),
+          password: faker.internet.password({ length: 20 }),
+          administrator: 'false'
+        };
+
+        cy.apiRegisterUser(newUser).then(() => {
+          performLogin(newUser.email, newUser.password);
+        });
+      } else {
+        if (cacheSession) {
+          cy.session(user, () => performLogin(user, password), options);
+        } else {
+          performLogin(user, password);
+        }
+      }
+    });
+  }
+);
 
 Cypress.Commands.add('guiRegisterUserAdminArea', (user) => {
   cy.visit(`${Cypress.config('baseUrl')}/admin/cadastrarusuarios`)
@@ -116,6 +165,7 @@ Cypress.Commands.add('guiRegisterProduct', (product) => {
 })
 
 Cypress.Commands.add('guiSearchProduct', (product) => {
+
   cy.get('[data-testid="pesquisar"]').type(product.name)
 
   cy.intercept({

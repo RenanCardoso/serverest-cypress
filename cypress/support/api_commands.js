@@ -20,6 +20,7 @@ Cypress.Commands.add('apiLogin', (userEmail, userPassword) => {
 
   return login().then(response => {
     if (response.status !== 200) {
+
       const user = {
         name: faker.person.fullName(),
         email: faker.internet.email().toLowerCase(),
@@ -28,7 +29,7 @@ Cypress.Commands.add('apiLogin', (userEmail, userPassword) => {
       };
       
       return cy.apiRegisterUser(user).then(() => {
-        return login();
+        return cy.apiLogin(user.email, user.password);
       });
     }
 

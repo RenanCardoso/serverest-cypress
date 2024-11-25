@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker'
+
 describe('Listar usuários', () => {
   let user = {
     name: faker.person.fullName(),

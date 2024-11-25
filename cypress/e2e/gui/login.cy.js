@@ -47,6 +47,6 @@ describe('Login', () => {
 
     // Verificar se foi redirecionado para a url correta após o login
     cy.url().should('be.equal', `${Cypress.config('baseUrl')}/home`)
-    cy.contains('Password é obrigatório').should('be.visible')
+    cy.contains('Serverest Store').should('be.visible')
   })
 })
