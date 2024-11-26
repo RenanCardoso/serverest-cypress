@@ -4,7 +4,7 @@ describe('Cadastrar produto via API', () => {
   let accessToken = ''
 
   const product = {
-    name: `product ${faker.food.ingredient()}`,
+    name: `product ${faker.food.ingredient()} ${faker.string.uuid()}`,
     price: faker.number.int({ min: 1, max: 1000 }),
     description: faker.lorem.lines(1),
     quantity: faker.number.int({ min: 1, max: 1000 })

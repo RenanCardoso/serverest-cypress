@@ -27,7 +27,7 @@ Cypress.Commands.add('apiLogin', (userEmail, userPassword) => {
         password: faker.internet.password({ length: 20 }),
         administrator: 'true'
       };
-      
+
       return cy.apiRegisterUser(user).then(() => {
         return cy.apiLogin(user.email, user.password);
       });
@@ -139,6 +139,56 @@ Cypress.Commands.add('apiEditUserById', (accessToken, user, newUser) => {
       password: newUser.password,
       administrador: newUser.administrator
     },
+    headers: { Authorization: accessToken }
+  })
+})
+
+Cypress.Commands.add('apiListCarts', (accessToken, cart) => {
+  cy.request({
+    method: 'GET',
+    url: `${Cypress.config('apiUrl')}/carrinhos`,
+    headers: { Authorization: accessToken }
+  })
+})
+
+/**** Carrinho ****/
+Cypress.Commands.add('apiRegisterCart', (accessToken, id, quantity) => {
+  cy.request({
+    method: 'POST',
+    url: `${Cypress.config('apiUrl')}/carrinhos`,
+    failOnStatusCode: false,
+    body: {
+      produtos: [
+        {
+          idProduto: id,
+          quantidade: quantity
+        }
+      ]
+    },
+    headers: { Authorization: accessToken }
+  })
+})
+
+Cypress.Commands.add('apiSearchCartById', (accessToken, id) => {
+  cy.request({
+    method: 'GET',
+    url: `${Cypress.config('apiUrl')}/carrinhos/${id}`,
+    headers: { Authorization: accessToken }
+  })
+})
+
+Cypress.Commands.add('apiDeleteCart', (accessToken) => {
+  cy.request({
+    method: 'DELETE',
+    url: `${Cypress.config('apiUrl')}/carrinhos/concluir-compra`,
+    headers: { Authorization: accessToken }
+  })
+})
+
+Cypress.Commands.add('apiCancelPurchaseDeleteCart', (accessToken) => {
+  cy.request({
+    method: 'DELETE',
+    url: `${Cypress.config('apiUrl')}/carrinhos/cancelar-compra`,
     headers: { Authorization: accessToken }
   })
 })
